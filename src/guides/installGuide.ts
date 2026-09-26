@@ -16,7 +16,7 @@ const sanitizeGuideTitle = (title: string) => title.replaceAll(/:|\?|\\|\/|\|/g,
 
 /** The fixed path the skill and the plugin both write mastery guides to. */
 export const guideFileName = (title: string, consoleName: string) =>
-	normalizePath(`RetroAchievements/${sanitizeGuideTitle(title)} (${consoleNameSanitizer(consoleName)}).md`);
+	normalizePath(`RetroAchievements/guides/${sanitizeGuideTitle(title)} (${consoleNameSanitizer(consoleName)}).md`);
 
 /** Any note already carrying this game's guide, wherever it lives and however its console is named. */
 const findExistingGuide = (plugin: RaSearchPlugin, gameId: number): TFile | null =>

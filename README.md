@@ -28,7 +28,7 @@ Automatically create a base within Obsidian, automatically showing files in your
 Installs mastery guides for any already-imported games that have one published, without re-running the full import. Useful after a guide is published for a game you added earlier.
 
 # Mastery guides
-When a game has a published mastery guide, `Add game`, `Auto import RA library`, and `Fetch guides for library` install a personalized copy alongside the game note at `RetroAchievements/<Title> (<Console>).md`, with achievements you've already unlocked in hardcore ticked off. An existing note at that path is never overwritten, so a guide you've customized by hand stays yours. The game note's frontmatter gets a `guide` property linking to it.
+When a game has a published mastery guide, `Add game`, `Auto import RA library`, and `Fetch guides for library` install a personalized copy alongside the game note at `RetroAchievements/guides/<Title> (<Console>).md`, with achievements you've already unlocked in hardcore ticked off. A note already carrying that game's `ra_game_id` is never overwritten, wherever it lives, so a guide you've customized by hand stays yours. The game note's frontmatter gets a `guide` property linking to it.
 
 Guides come from a public registry of full-set, progress-neutral guides at `raw.githubusercontent.com/Dusty-Bottoms/ra-guides`. Installing one makes a network request to that host to look up and download the guide; softcore-only readers are unaffected since the guide stays hardcore-safe (softcore unlocks are never ticked). Turn this off with the **Fetch mastery guides** setting, or point **Guide registry URL** at a different registry that follows the same `index.json`/`guides/<id>.md` layout.
 
