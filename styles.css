@@ -45,3 +45,746 @@ If your plugin does not need CSS, delete this file.
 .bases-cards-item:has(.ra-status-beaten-hardcore) {
 	box-shadow: var(--ra-search-bronze-glow);
 }
+
+/* ============================================================================
+   Mastery guide theme, appended verbatim from ra-strategist's
+   assets/achievement-guide.css (Dusty-Bottoms/ra-strategist), so guides
+   fetched from the ra-guides registry render themed without a separate
+   CSS snippet install.
+   ============================================================================ */
+
+/* ============================================================================
+   Achievement Guide — Obsidian snippet
+   Drop in  <vault>/.obsidian/snippets/achievement-guide.css
+   then enable it in  Settings → Appearance → CSS snippets.
+
+   Notes using it must carry this frontmatter:
+       cssclasses: [achievement-guide, theme-fantasy]
+   Swap the theme class for: theme-fantasy | theme-cyber | theme-ember | theme-ice
+   Everything is scoped under .achievement-guide:not(.ag-spine) so it never touches other notes.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Spline+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Orbitron:wght@600;700;800&display=swap');
+
+/* ---- palette + theme tokens ------------------------------------------------ */
+.achievement-guide:not(.ag-spine) {
+  --ag-bg:        #0e1117;
+  --ag-panel:     #131922;
+  --ag-panel-2:   #10151c;
+  --ag-border:    #243140;
+  --ag-border-2:  #1d2733;
+  --ag-text:      #e6edf3;
+  --ag-dim:       #aab6c4;
+  --ag-faint:     #7d8aa0;
+  --ag-mute:      #5b6b7d;
+
+  --ag-blue:      #7cc4ff;
+  --ag-coral:     #ff6f6b;
+  --ag-amber:     #f5b945;
+  --ag-danger:    #ff5c5c;
+
+  /* themeable accent — overridden by the theme-* classes below */
+  --ag-accent:    #34e0c4;
+  --ag-accent-dim:#1f8f7e;
+  --ag-glow:      rgba(52,224,196,.5);
+  --ag-soft:      rgba(52,224,196,.10);
+  --ag-title:     #e8c264;
+  --ag-title-shadow: rgba(232,194,100,.32);
+  --ag-display:   'Cinzel', Georgia, serif;
+
+  /* type colours */
+  --t-story:#7cc4ff; --t-boss:#ff6f6b; --t-collectible:#34e0c4;
+  --t-grind:#f0a64a; --t-skill:#b98ce0; --t-completion:#ffd166;
+  /* rarity colours */
+  --r-common:#6f7d8c; --r-uncommon:#5fa8d8; --r-rare:#c08ae0; --r-ultra:#f5b945;
+  /* spoiler marker accent (orthogonal to type/rarity) */
+  --ag-spoil:#c879d6;
+
+  font-family: 'Spline Sans', var(--font-text, sans-serif);
+}
+.achievement-guide:not(.ag-spine).theme-fantasy { --ag-accent:#34e0c4; --ag-accent-dim:#1f8f7e; --ag-glow:rgba(52,224,196,.5);  --ag-soft:rgba(52,224,196,.10);  --ag-title:#e8c264; --ag-title-shadow:rgba(232,194,100,.32); --ag-display:'Cinzel',serif; }
+.achievement-guide:not(.ag-spine).theme-cyber   { --ag-accent:#ff4fd8; --ag-accent-dim:#b3199f; --ag-glow:rgba(255,79,216,.5);  --ag-soft:rgba(255,79,216,.10);  --ag-title:#00e5ff; --ag-title-shadow:rgba(0,229,255,.4);    --ag-display:'Orbitron',sans-serif; }
+.achievement-guide:not(.ag-spine).theme-ember   { --ag-accent:#f5a623; --ag-accent-dim:#b3760f; --ag-glow:rgba(245,166,35,.5);  --ag-soft:rgba(245,166,35,.10);  --ag-title:#ff7a45; --ag-title-shadow:rgba(255,122,69,.35);  --ag-display:'Cinzel',serif; }
+.achievement-guide:not(.ag-spine).theme-ice     { --ag-accent:#5bc8ff; --ag-accent-dim:#2a82c4; --ag-glow:rgba(91,200,255,.5);  --ag-soft:rgba(91,200,255,.10);  --ag-title:#cfe9ff; --ag-title-shadow:rgba(91,200,255,.3);   --ag-display:'Cinzel',serif; }
+
+/* ---- page width ------------------------------------------------------------ */
+/* Obsidian's "Readable line length" caps a note around 700px, which squeezes
+   these guides into a narrow column. Widen it for guide notes only.
+   Tweak the number (or use 100% for edge-to-edge), or delete this block to
+   go back to the vault default. */
+.achievement-guide:not(.ag-spine) {
+  --file-line-width: 1150px;
+  --file-margins: 24px 48px 48px;
+}
+.achievement-guide:not(.ag-spine).markdown-preview-view .markdown-preview-sizer,
+.achievement-guide:not(.ag-spine) .markdown-preview-sizer,
+.achievement-guide:not(.ag-spine) .cm-sizer,
+.achievement-guide:not(.ag-spine) .cm-contentContainer {
+  max-width: var(--file-line-width) !important;
+  width: 100%;
+}
+
+/* ---- page canvas ----------------------------------------------------------- */
+.achievement-guide:not(.ag-spine).markdown-preview-view,
+.achievement-guide:not(.ag-spine) .markdown-preview-sizer { background: var(--ag-bg); }
+.achievement-guide:not(.ag-spine).markdown-preview-view {
+  color: var(--ag-text);
+  font-size: 16px;
+  line-height: 1.55;
+  --link-color: var(--ag-blue);
+  --link-decoration: none;
+}
+.achievement-guide:not(.ag-spine) p { color: var(--ag-dim); }
+.achievement-guide:not(.ag-spine) strong { color: #eef3f7; font-weight: 700; }
+.achievement-guide:not(.ag-spine) a.tag { background: var(--ag-soft); color: var(--ag-accent); border: none; }
+
+/* ---- headings -------------------------------------------------------------- */
+.achievement-guide:not(.ag-spine) h1 { font-family: var(--ag-display); color: var(--ag-title); font-weight: 700; }
+.achievement-guide:not(.ag-spine) h2 {
+  color: var(--ag-accent); font-weight: 700; font-size: 1.5em;
+  margin-top: 1.6em; padding-bottom: .25em;
+}
+.achievement-guide:not(.ag-spine) h2::before { content: "◆ "; color: var(--ag-accent); }
+.achievement-guide:not(.ag-spine) h3 {
+  color: var(--ag-text); font-weight: 700; font-size: 1.18em;
+  border-left: 3px solid var(--ag-accent); padding-left: .55em; margin-top: 1.4em;
+}
+.achievement-guide:not(.ag-spine) h4 { color: var(--ag-faint); font-family:'JetBrains Mono',monospace; font-size:.8em; letter-spacing:1.5px; text-transform:uppercase; }
+
+/* ---- HERO banner (HTML block) ---------------------------------------------- */
+.achievement-guide:not(.ag-spine) .ag-hero {
+  position: relative; overflow: hidden;
+  margin: .4em 0 1.4em; padding: 22px 22px 20px;
+  border: 1px solid var(--ag-border-2); border-radius: 18px;
+  background:
+    radial-gradient(120% 130% at 80% 0%, color-mix(in srgb, var(--ag-title) 16%, transparent), transparent 55%),
+    linear-gradient(160deg,#12202b 0%,#0c151d 75%);
+}
+.achievement-guide:not(.ag-spine) .ag-hero .ag-eyebrow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:2.5px; color:var(--ag-faint); text-transform:uppercase; }
+.achievement-guide:not(.ag-spine) .ag-hero .ag-title {
+  font-family: var(--ag-display); font-weight:700; font-size:40px; line-height:1.03;
+  color: var(--ag-title); margin:8px 0 0; text-shadow:0 2px 22px var(--ag-title-shadow);
+}
+.achievement-guide:not(.ag-spine) .ag-hero .ag-sub { font-style:italic; color:#9fb0c0; font-size:14px; margin-top:10px; }
+
+/* segmented multi-run progress bar */
+.achievement-guide:not(.ag-spine) .ag-bar { display:flex; gap:4px; height:13px; margin-top:18px; }
+.achievement-guide:not(.ag-spine) .ag-bar .ag-seg {
+  min-width:8px; height:100%; border-radius:5px; overflow:hidden;
+  background:#0a1218; border:1px solid var(--ag-border-2);
+}
+.achievement-guide:not(.ag-spine) .ag-bar .ag-seg > i {
+  display:block; height:100%; border-radius:4px;
+  background:linear-gradient(90deg,var(--ag-accent-dim),var(--ag-accent) 75%,#fff);
+  box-shadow:0 0 12px var(--ag-glow);
+}
+.achievement-guide:not(.ag-spine) .ag-runs { display:flex; gap:4px; margin-top:7px; }
+.achievement-guide:not(.ag-spine) .ag-runs > div { min-width:0; }
+.achievement-guide:not(.ag-spine) .ag-runs .r-tag { font-family:'JetBrains Mono',monospace; font-size:9.5px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; color:var(--ag-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.achievement-guide:not(.ag-spine) .ag-runs .r-tag.done { color:var(--ag-accent); }
+.achievement-guide:not(.ag-spine) .ag-runs .r-name { font-size:10.5px; color:var(--ag-dim); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.achievement-guide:not(.ag-spine) .ag-count { font-family:'JetBrains Mono',monospace; display:flex; justify-content:space-between; align-items:flex-end; margin-top:14px; }
+.achievement-guide:not(.ag-spine) .ag-count b { font-size:22px; color:var(--ag-accent); }
+.achievement-guide:not(.ag-spine) .ag-count span { font-size:11px; color:var(--ag-faint); }
+
+.achievement-guide:not(.ag-spine) .ag-chips { display:flex; flex-wrap:wrap; gap:7px; margin-top:14px; }
+.achievement-guide:not(.ag-spine) .ag-chips .chip { display:inline-flex; align-items:center; gap:5px; padding:5px 10px; border-radius:8px; font-size:11px; font-weight:600; border:1px solid; }
+.achievement-guide:not(.ag-spine) .ag-chips .chip.warn   { color:var(--ag-amber);  background:rgba(245,185,69,.12);  border-color:rgba(245,185,69,.4); }
+.achievement-guide:not(.ag-spine) .ag-chips .chip.danger { color:#ff7a7a;          background:rgba(255,92,92,.1);    border-color:rgba(255,92,92,.38); }
+.achievement-guide:not(.ag-spine) .ag-chips .chip.info   { color:var(--ag-blue);   background:rgba(124,196,255,.1);  border-color:rgba(124,196,255,.32); }
+.achievement-guide:not(.ag-spine) .ag-chips .chip.spoil  { color:var(--ag-spoil);  background:color-mix(in srgb, var(--ag-spoil) 12%, transparent); border-color:color-mix(in srgb, var(--ag-spoil) 38%, transparent); }
+
+/* ---- type pills + rarity tags + missable marker ---------------------------- */
+.achievement-guide:not(.ag-spine) .ag-pill {
+  display:inline-flex; align-items:center; gap:5px; vertical-align:middle;
+  padding:2px 9px; border-radius:20px; font-size:11px; font-weight:700;
+  background:color-mix(in srgb, var(--c) 14%, transparent);
+  border:1px solid color-mix(in srgb, var(--c) 42%, transparent); color:var(--c);
+}
+.achievement-guide:not(.ag-spine) .ag-pill::before { content:""; width:7px; height:7px; border-radius:50%; background:var(--c); }
+.achievement-guide:not(.ag-spine) .ag-pill.story{--c:var(--t-story)} .achievement-guide:not(.ag-spine) .ag-pill.boss{--c:var(--t-boss)}
+.achievement-guide:not(.ag-spine) .ag-pill.collectible{--c:var(--t-collectible)} .achievement-guide:not(.ag-spine) .ag-pill.grind{--c:var(--t-grind)}
+.achievement-guide:not(.ag-spine) .ag-pill.skill{--c:var(--t-skill)} .achievement-guide:not(.ag-spine) .ag-pill.completion{--c:var(--t-completion)}
+
+.achievement-guide:not(.ag-spine) .ag-rar { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; vertical-align:middle; color:var(--c); white-space:nowrap; flex:none; }
+.achievement-guide:not(.ag-spine) .ag-rar::before { content:"◦ "; }
+.achievement-guide:not(.ag-spine) .ag-rar.common{--c:var(--r-common)} .achievement-guide:not(.ag-spine) .ag-rar.uncommon{--c:var(--r-uncommon)}
+.achievement-guide:not(.ag-spine) .ag-rar.rare{--c:var(--r-rare)} .achievement-guide:not(.ag-spine) .ag-rar.ultra{--c:var(--r-ultra)}
+
+.achievement-guide:not(.ag-spine) .ag-miss {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; vertical-align:middle;
+  color:var(--ag-amber); background:rgba(245,185,69,.14); border:1px solid rgba(245,185,69,.42);
+  border-radius:5px; padding:0 5px; white-space:nowrap;
+}
+/* spoiler marker — orthogonal to type/rarity, sits beside ag-miss */
+.achievement-guide:not(.ag-spine) .ag-spoil {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; vertical-align:middle;
+  color:var(--ag-spoil); background:color-mix(in srgb, var(--ag-spoil) 14%, transparent);
+  border:1px solid color-mix(in srgb, var(--ag-spoil) 42%, transparent);
+  border-radius:5px; padding:0 5px; white-space:nowrap; flex:none;
+}
+.achievement-guide:not(.ag-spine) .ag-spoil::before { content:"🔒 "; }
+
+/* ---- INDEX callout  ( > [!index] ) ----------------------------------------- */
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] {
+  --callout-color: 52,224,196;
+  background: var(--ag-panel-2); border:1px solid var(--ag-border-2); border-radius:16px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] .callout-icon { display:none; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] .callout-title { color:var(--ag-text); font-weight:700; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] .callout-title::before { content:"◆ "; color:var(--ag-blue); }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] ul { margin:0; padding:0; list-style:none; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] li {
+  display:flex; align-items:center; gap:9px; padding:8px 2px; margin:0;
+  border-top:1px solid #18242b; font-size:13px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] li::before { display:none; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] li a { color:var(--ag-dim); flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="index"] .ag-pill { flex:none; min-width:78px; }
+
+/* ---- task lists  (the tappable chunks) ------------------------------------- */
+.achievement-guide:not(.ag-spine) ul.contains-task-list { padding-left:0; }
+.achievement-guide:not(.ag-spine) li.task-list-item {
+  list-style:none; position:relative;
+  padding:9px 2px 9px 36px; margin:0; border-top:1px solid #18242b;
+  line-height:1.55; color:var(--ag-dim);
+}
+.achievement-guide:not(.ag-spine) li.task-list-item::marker { content:none; }
+.achievement-guide:not(.ag-spine) li.task-list-item::before { display:none; }
+/* checkbox is absolutely placed so it never turns the line into a flex row
+   (which would split the title/description/pills into overlapping columns) */
+.achievement-guide:not(.ag-spine) .task-list-item-checkbox {
+  appearance:none; -webkit-appearance:none;
+  position:absolute; left:2px; top:8px;
+  width:22px !important; height:22px !important; margin:0 !important;
+  border:2px solid #3a4658; border-radius:7px; background:transparent; cursor:pointer;
+}
+.achievement-guide:not(.ag-spine) .task-list-item-checkbox:checked { background:var(--ag-accent); border-color:var(--ag-accent); box-shadow:0 0 10px var(--ag-glow); }
+.achievement-guide:not(.ag-spine) .task-list-item-checkbox:checked::after {
+  content:""; position:absolute; left:6px; top:2px; width:5px; height:10px;
+  border:solid #06231d; border-width:0 3px 3px 0; transform:rotate(45deg);
+}
+/* a checked ACHIEVEMENT (top-level rich line) just dims — never strike the whole
+   line (it would inherit into the unchecked sub-steps below it). */
+/* a checked ACHIEVEMENT (top-level rich line) dims AND crosses out — but the
+   strike must not bleed into the sub-steps below it, nor through the pills/link */
+.achievement-guide:not(.ag-spine) li.task-list-item.is-checked { color:var(--ag-mute); text-decoration:line-through; text-decoration-color:var(--ag-mute); }
+.achievement-guide:not(.ag-spine) li.task-list-item.is-checked > ul { text-decoration:none; }   /* stop the line propagating into sub-steps */
+.achievement-guide:not(.ag-spine) li.task-list-item.is-checked strong { color:var(--ag-mute); }
+/* pills / rarity / missable / source links are never struck */
+.achievement-guide:not(.ag-spine) .ag-pill, .achievement-guide:not(.ag-spine) .ag-rar,
+.achievement-guide:not(.ag-spine) .ag-miss, .achievement-guide:not(.ag-spine) a.ag-src { text-decoration:none !important; }
+/* simple sub-steps + collectibles get a strike ONLY when they themselves are checked */
+.achievement-guide:not(.ag-spine) li.task-list-item li.task-list-item.is-checked,
+.achievement-guide:not(.ag-spine) .callout li.task-list-item.is-checked {
+  text-decoration:line-through; text-decoration-color:var(--ag-mute);
+}
+
+/* ---- callouts: missable / PONR / boss / grab ------------------------------- */
+.achievement-guide:not(.ag-spine) .callout { border-radius:14px; mix-blend-mode:normal; margin:1em 0; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="warning"] { --callout-color:245,185,69;  background:rgba(245,185,69,.07);  border:1px solid rgba(245,185,69,.35); }
+.achievement-guide:not(.ag-spine) .callout[data-callout="danger"]  { --callout-color:255,92,92;   background:rgba(255,92,92,.07);   border:1px solid rgba(255,92,92,.4); }
+.achievement-guide:not(.ag-spine) .callout[data-callout="warning"] .callout-title,
+.achievement-guide:not(.ag-spine) .callout[data-callout="danger"]  .callout-title { font-family:'JetBrains Mono',monospace; letter-spacing:1.5px; text-transform:uppercase; font-size:12px; }
+
+/* boss loadout card */
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] {
+  --callout-color:52,224,196;
+  background:linear-gradient(165deg,#14242c,#0d161d); border:1px solid var(--ag-accent-dim); border-radius:16px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .callout-title { color:var(--ag-accent); font-weight:700; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .callout-icon { color:var(--ag-accent); }
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .ag-stats { display:flex; flex-wrap:wrap; gap:7px; margin:2px 0 10px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .ag-stats code { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ag-dim); background:#0c151b; border:1px solid var(--ag-border); border-radius:7px; padding:3px 8px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .ag-power { display:block; margin-top:10px; padding:10px 12px; border-radius:11px; background:rgba(232,194,100,.08); border:1px solid rgba(232,194,100,.3); color:#e9d9a8; font-size:13px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="boss"] .callout-icon,
+.achievement-guide:not(.ag-spine) .callout[data-callout="grab"] .callout-icon { display:none; }
+
+/* collectibles drawer */
+.achievement-guide:not(.ag-spine) .callout[data-callout="grab"] {
+  --callout-color:52,224,196; background:var(--ag-soft); border:1px dashed var(--ag-accent-dim); border-radius:14px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="grab"] .callout-title { color:var(--ag-accent); font-family:'JetBrains Mono',monospace; letter-spacing:1px; text-transform:uppercase; font-size:12px; }
+
+/* how-to-use switchboard */
+.achievement-guide:not(.ag-spine) .callout[data-callout="how"] {
+  --callout-color:124,196,255; background:rgba(124,196,255,.06); border:1px solid rgba(124,196,255,.3); border-radius:14px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="how"] .callout-title { color:var(--ag-blue); font-weight:700; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="how"] .callout-icon { color:var(--ag-blue); }
+
+/* route checklist — the flowchart tier; accent-framed like the index */
+.achievement-guide:not(.ag-spine) .callout[data-callout="route"] {
+  --callout-color:52,224,196; background:var(--ag-panel-2); border:1px solid var(--ag-accent-dim); border-radius:16px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="route"] .callout-title { color:var(--ag-accent); font-family:'JetBrains Mono',monospace; letter-spacing:1px; text-transform:uppercase; font-size:12px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="route"] .callout-icon { display:none; }
+
+/* secret — folded spoiler detail; muted until opened */
+.achievement-guide:not(.ag-spine) .callout[data-callout="secret"] {
+  --callout-color:200,121,214; background:color-mix(in srgb, var(--ag-spoil) 8%, transparent); border:1px dashed color-mix(in srgb, var(--ag-spoil) 45%, transparent); border-radius:14px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="secret"] .callout-title { color:var(--ag-spoil); font-family:'JetBrains Mono',monospace; letter-spacing:1px; text-transform:uppercase; font-size:12px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="secret"] .callout-icon { color:var(--ag-spoil); }
+
+/* fold chevrons tinted to accent */
+.achievement-guide:not(.ag-spine) .callout .callout-fold { color:var(--ag-faint); }
+
+/* ---- source links + inline [G#] tags --------------------------------------- */
+.achievement-guide:not(.ag-spine) .ag-power { display:block; }
+/* source tags: plain <a> so they render (HTML inside a [[wikilink]] alias breaks) */
+.achievement-guide:not(.ag-spine) a.ag-src, .achievement-guide:not(.ag-spine) .ag-src {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:600;
+  color:var(--ag-blue); background:rgba(124,196,255,.1); border:1px solid rgba(124,196,255,.3);
+  border-radius:6px; padding:2px 7px; text-decoration:none; white-space:nowrap;
+}
+
+/* ---- image embeds (location screenshots / maps) ---------------------------- */
+.achievement-guide:not(.ag-spine) .internal-embed img,
+.achievement-guide:not(.ag-spine) img { border-radius:12px; border:1px solid var(--ag-accent-dim); display:block; }
+.achievement-guide:not(.ag-spine) .ag-caption { font-size:11.5px; color:var(--ag-faint); margin-top:6px; }
+.achievement-guide:not(.ag-spine) .ag-caption::before { content:"▣ "; color:var(--ag-accent); }
+
+/* ---- top "last updated" line ----------------------------------------------- */
+.achievement-guide:not(.ag-spine) blockquote { border-left:3px solid var(--ag-accent); background:var(--ag-panel-2); color:var(--ag-faint); border-radius:0 8px 8px 0; }
+
+/* ---- LIVE variant (optional, needs Dataview) ------------------------------- */
+/* the [run:: N] inline field marks a line as an achievement for the live counter;
+   it's machine-only, so hide it from the rendered note. */
+.achievement-guide:not(.ag-spine) .dataview.inline-field,
+.achievement-guide:not(.ag-spine) .dataview.inline-field-standalone-value { display:none; }
+/* the dataviewjs hero renders the same .ag-hero markup — just strip default spacing */
+.achievement-guide:not(.ag-spine) .block-language-dataviewjs { margin:0 0 1.2em; }
+.achievement-guide:not(.ag-spine) .block-language-dataviewjs p:empty { display:none; }
+/* cascade variant: the real task lines live in a [!src] callout that Dataview
+   reads but the reader shouldn't see — the dv.taskList blocks render them instead. */
+.achievement-guide:not(.ag-spine).ag-cascade .callout[data-callout="src"] { display:none; }
+
+
+/* =====================================================================
+   steam-walkthrough-strategist additions — appended 2026-08-03
+   Only the rules this snippet was missing: .ag-unlock, [!kit], [!gap].
+   (how / route / secret / ag-spoil / .chip / .ag-runs were already here.)
+   Backup of the pre-append file: achievement-guide.css.bak-20260803
+   ===================================================================== */
+
+/* ---- achievement-unlock marker (walkthrough: ✦ Unlocks … on a waypoint) ---- */
+.achievement-guide:not(.ag-spine) .ag-unlock {
+  font-family:'JetBrains Mono',monospace; font-size:10px; font-weight:700; vertical-align:middle;
+  color:var(--ag-title); background:color-mix(in srgb, var(--ag-title) 14%, transparent);
+  border:1px solid color-mix(in srgb, var(--ag-title) 40%, transparent);
+  border-radius:5px; padding:0 5px; white-space:nowrap; flex:none; text-transform:uppercase; letter-spacing:.5px;
+}
+.achievement-guide:not(.ag-spine) .ag-unlock::before { content:"✦ "; }
+
+/* ---- kit  ( > [!kit] )  — "what to use here" loadout card (walkthrough) ----- */
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] {
+  --callout-color:52,224,196;
+  background:linear-gradient(165deg,#14242c,#0d161d); border:1px solid var(--ag-accent-dim); border-radius:16px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] .callout-title { color:var(--ag-accent); font-family:'JetBrains Mono',monospace; letter-spacing:1px; text-transform:uppercase; font-size:12px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] .callout-icon { color:var(--ag-accent); }
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] .ag-stats { display:flex; flex-wrap:wrap; gap:7px; margin:2px 0 10px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] .ag-stats code { font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--ag-dim); background:#0c151b; border:1px solid var(--ag-border); border-radius:7px; padding:3px 8px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="kit"] .ag-power { display:block; margin-top:10px; padding:10px 12px; border-radius:11px; background:rgba(232,194,100,.08); border:1px solid rgba(232,194,100,.3); color:#e9d9a8; font-size:13px; }
+
+/* ---- gap  ( > [!gap] )  — sources don't cover this; not invented ----------- */
+.achievement-guide:not(.ag-spine) .callout[data-callout="gap"] {
+  --callout-color:125,138,160; background:rgba(125,138,160,.07); border:1px dashed rgba(125,138,160,.5); border-radius:14px;
+}
+.achievement-guide:not(.ag-spine) .callout[data-callout="gap"] .callout-title { color:var(--ag-faint); font-family:'JetBrains Mono',monospace; letter-spacing:1.2px; text-transform:uppercase; font-size:11.5px; }
+.achievement-guide:not(.ag-spine) .callout[data-callout="gap"] .callout-title::before { content:"⚑ "; }
+
+
+/* =====================================================================
+   SPINE format — appended 2026-08-26 from Tyler's UX-improvement design.
+   Applies ONLY to notes carrying cssclasses: [achievement-guide, ag-spine];
+   every legacy rule above is guarded with :not(.ag-spine) so the two
+   contracts never cross. Backup: achievement-guide.css.bak-20260826
+   ===================================================================== */
+
+/* ─────────────────────────────────────────────────────────────────────────
+   achievement-guide.css — "The Spine"
+   Obsidian CSS snippet for RA Strategist / Steam achievement plans.
+
+   Install: copy to <vault>/.obsidian/snippets/achievement-guide.css
+            Settings → Appearance → CSS snippets → enable.
+
+   Applies only to notes with `cssclasses: [achievement-guide, theme-<slug>]`.
+   Themes: theme-fantasy (default) · theme-ember · theme-cyber · theme-ice
+   Designed phone-first, dark-first. Light mode is supported but secondary.
+   ───────────────────────────────────────────────────────────────────────── */
+
+.achievement-guide.ag-spine {
+  --ag-accent:      #d7a33f;
+  --ag-accent-soft: rgba(215, 163, 63, .09);
+  --ag-accent-line: #5c4425;
+  --ag-display:     "Cinzel", Georgia, serif;
+
+  --ag-ink:      var(--text-normal);
+  --ag-ink-dim:  var(--text-muted);
+  --ag-ink-faint:var(--text-faint);
+  --ag-panel:    var(--background-primary-alt);
+  --ag-hair:     var(--background-modifier-border);
+
+  --ag-lost:     #d1533a;
+  --ag-lost-bg:  rgba(209, 83, 58, .10);
+  --ag-done:     #4c8a55;
+  --ag-quiet:    #7f9bb0;
+}
+
+.achievement-guide.ag-spine.theme-ember  { --ag-accent:#e8913a; --ag-accent-soft:rgba(232,145,58,.09); --ag-accent-line:#6b451f; }
+.achievement-guide.ag-spine.theme-cyber  { --ag-accent:#4fd6d0; --ag-accent-soft:rgba(79,214,208,.09);  --ag-accent-line:#1f5a58; --ag-display:"Orbitron",var(--font-interface); }
+.achievement-guide.ag-spine.theme-ice    { --ag-accent:#7ab8e8; --ag-accent-soft:rgba(122,184,232,.09); --ag-accent-line:#274a63; }
+
+/* Wider comfortable measure on phone; the note is a list, not prose. */
+.achievement-guide.ag-spine .markdown-preview-view,
+.achievement-guide.ag-spine .markdown-rendered { line-height: 1.5; }
+
+
+/* ── 1 · Header ─────────────────────────────────────────────────────────── */
+/* Slim, sticky, three facts. Everything else lives in the footer line. */
+
+.achievement-guide.ag-spine .ag-hero {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  margin: -6px -12px 14px;
+  padding: 10px 14px 11px;
+  background: var(--background-primary);
+  border-bottom: 1px solid var(--ag-accent-line);
+  backdrop-filter: saturate(140%) blur(6px);
+}
+.achievement-guide.ag-spine .ag-hero .ag-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+}
+.achievement-guide.ag-spine .ag-title {
+  font-family: var(--ag-display);
+  font-weight: 700; font-size: 1.15rem; line-height: 1.15;
+  color: var(--ag-ink);
+}
+.achievement-guide.ag-spine .ag-count { font-size: .78rem; color: var(--ag-ink-dim); white-space: nowrap; }
+.achievement-guide.ag-spine .ag-count b { color: var(--ag-accent); font-size: .95rem; }
+.achievement-guide.ag-spine .ag-bar {
+  height: 3px; margin-top: 8px; border-radius: 2px; overflow: hidden;
+  background: var(--ag-hair);
+}
+.achievement-guide.ag-spine .ag-bar i { display: block; height: 100%; background: var(--ag-accent); }
+
+/* Footer disclosure line — points, GameID, rarity basis, glyph key. */
+.achievement-guide.ag-spine .ag-foot {
+  margin-top: 28px; padding-top: 12px;
+  border-top: 1px solid var(--ag-hair);
+  font-size: .78rem; line-height: 1.6; color: var(--ag-ink-faint);
+}
+
+
+/* ── 2 · Callouts ───────────────────────────────────────────────────────── */
+/* Four types, three volumes. Colour is a scarce resource:
+   red = you can lose something forever. accent = act now. grey = reference. */
+
+.achievement-guide.ag-spine .callout { border-radius: 9px; padding: 11px 13px; margin: 12px 0; }
+.achievement-guide.ag-spine .callout-title { padding: 0; margin-bottom: 5px; }
+.achievement-guide.ag-spine .callout-title-inner {
+  font-size: .66rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase;
+}
+.achievement-guide.ag-spine .callout-icon { display: none; }
+.achievement-guide.ag-spine .callout-content > :first-child { margin-top: 0; }
+.achievement-guide.ag-spine .callout-content > :last-child  { margin-bottom: 0; }
+
+/* [!now] — the one card that answers "what do I do". Sits under the header. */
+.achievement-guide.ag-spine .callout[data-callout="now"] {
+  border: 1px solid var(--ag-accent-line);
+  background: var(--ag-accent-soft);
+  mix-blend-mode: normal;
+}
+.achievement-guide.ag-spine .callout[data-callout="now"] .callout-title-inner { color: var(--ag-accent); }
+.achievement-guide.ag-spine .callout[data-callout="now"] .callout-title-inner::before {
+  content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 7px;
+  border-radius: 99px; background: var(--ag-accent);
+  box-shadow: 0 0 0 3px var(--ag-accent-soft); vertical-align: middle;
+}
+.achievement-guide.ag-spine .callout[data-callout="now"] strong { color: var(--ag-ink); }
+
+/* [!lost] — permanent loss. The only loud thing in the note. */
+.achievement-guide.ag-spine .callout[data-callout="lost"] {
+  border: 1px solid var(--ag-lost);
+  background: var(--ag-lost-bg);
+}
+.achievement-guide.ag-spine .callout[data-callout="lost"] .callout-title-inner { color: var(--ag-lost); }
+
+/* [!gate] — what you need in hand before entering a chapter. */
+.achievement-guide.ag-spine .callout[data-callout="gate"] {
+  border: 1px dashed var(--ag-hair);
+  background: transparent;
+}
+.achievement-guide.ag-spine .callout[data-callout="gate"] .callout-title-inner { color: var(--ag-ink-dim); }
+
+/* [!rules] — set rules, emulator, hash. Read once, folded by default. */
+.achievement-guide.ag-spine .callout[data-callout="rules"] {
+  border: 1px solid var(--ag-hair);
+  background: var(--ag-panel);
+}
+.achievement-guide.ag-spine .callout[data-callout="rules"] .callout-title-inner { color: var(--ag-ink-dim); }
+
+/* [!boss] — loadout card, inline where the fight is. */
+.achievement-guide.ag-spine .callout[data-callout="boss"] {
+  border: 1px solid var(--ag-hair);
+  border-left: 3px solid var(--ag-accent);
+  background: var(--ag-panel);
+}
+.achievement-guide.ag-spine .callout[data-callout="boss"] .callout-title-inner { color: var(--ag-accent); }
+.achievement-guide.ag-spine .ag-stats code {
+  font-size: .68rem; padding: 2px 6px; border-radius: 4px;
+  background: var(--ag-hair); color: var(--ag-ink-dim);
+}
+.achievement-guide.ag-spine .ag-power { color: var(--ag-accent); font-size: .85rem; }
+
+/* [!secret] — spoiler fold. */
+.achievement-guide.ag-spine .callout[data-callout="secret"] {
+  border: 1px solid var(--ag-hair); background: transparent;
+}
+
+
+/* ── 3 · Chapter headings ───────────────────────────────────────────────── */
+
+.achievement-guide.ag-spine h2 {
+  font-family: var(--ag-display);
+  font-weight: 700; font-size: 1.02rem;
+  color: var(--ag-ink);
+  margin: 26px 0 4px;
+  padding-bottom: 6px;
+  border: 0; border-bottom: 1px solid var(--ag-accent-line);
+}
+.achievement-guide.ag-spine h2 em {
+  float: right; font-style: normal;
+  font-size: .62rem; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ag-ink-faint);
+  font-family: var(--font-interface);
+  padding-top: 5px;
+}
+
+
+/* ── 4 · The spine ──────────────────────────────────────────────────────── */
+/* Every achievement, pickup and step is a native markdown checkbox, so
+   ticks toggle, persist and sync. Styling never wraps them in HTML. */
+
+.achievement-guide.ag-spine .markdown-rendered ul.contains-task-list { padding-left: 0; margin: 2px 0; }
+.achievement-guide.ag-spine li.task-list-item {
+  list-style: none;
+  padding: 7px 10px;
+  margin: 2px 0;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  transition: opacity .18s ease, background .18s ease;
+}
+.achievement-guide.ag-spine li.task-list-item::before { content: none; }
+.achievement-guide.ag-spine li.task-list-item input[type="checkbox"] {
+  margin-right: 10px;
+  width: 18px; height: 18px;
+  border-radius: 5px;
+}
+
+/* Nested chunks — the small binary steps under an achievement. */
+.achievement-guide.ag-spine li.task-list-item ul.contains-task-list {
+  margin: 7px 0 1px;
+  padding-left: 10px;
+  border-left: 2px solid var(--ag-hair);
+}
+.achievement-guide.ag-spine li.task-list-item ul.contains-task-list li.task-list-item {
+  padding: 3px 0; font-size: .92em;
+}
+
+/* Done → one dim line. Its chunks, meta and sub-steps fold away entirely. */
+.achievement-guide.ag-spine li.task-list-item.is-checked {
+  opacity: .42;
+}
+.achievement-guide.ag-spine li.task-list-item.is-checked > .ag-d,
+.achievement-guide.ag-spine li.task-list-item.is-checked > .ag-m,
+.achievement-guide.ag-spine li.task-list-item.is-checked > .ag-r,
+.achievement-guide.ag-spine li.task-list-item.is-checked > .ag-p,
+.achievement-guide.ag-spine li.task-list-item.is-checked > .ag-s,
+.achievement-guide.ag-spine li.task-list-item.is-checked > ul { display: none; }
+.achievement-guide.ag-spine li.task-list-item.is-checked > strong {
+  font-weight: 400; text-decoration: line-through; color: var(--ag-ink-faint);
+}
+
+/* YOU ARE HERE — the first unticked line in the chapter.
+   Every later unticked sibling cancels the marker, so exactly one wins. */
+.achievement-guide.ag-spine ul.contains-task-list > li.task-list-item:not(.is-checked) {
+  background: var(--ag-accent-soft);
+  border-color: var(--ag-accent-line);
+}
+.achievement-guide.ag-spine ul.contains-task-list > li.task-list-item:not(.is-checked)::after {
+  content: "You are here";
+  display: block;
+  order: -1;
+  font-size: .58rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ag-accent);
+  margin: 0 0 4px 28px;
+}
+.achievement-guide.ag-spine ul.contains-task-list > li.task-list-item:not(.is-checked)
+  ~ li.task-list-item:not(.is-checked) {
+  background: transparent;
+  border-color: transparent;
+}
+.achievement-guide.ag-spine ul.contains-task-list > li.task-list-item:not(.is-checked)
+  ~ li.task-list-item:not(.is-checked)::after { content: none; }
+/* Nested chunks never claim the marker. */
+.achievement-guide.ag-spine li.task-list-item li.task-list-item::after { content: none !important; }
+.achievement-guide.ag-spine li.task-list-item li.task-list-item {
+  background: transparent !important; border-color: transparent !important;
+}
+
+
+/* ── 5 · Line furniture ─────────────────────────────────────────────────── */
+/* Quiet by default. A line reads as: badge · title — what to do · type · rarity · ⓘ */
+
+/* Achievement badge art, straight off RA's media host.
+   The renderer always emits the full-colour asset; an unearned badge is greyed
+   here, in CSS, and the grey lifts on `.is-checked`. That is what makes the
+   payout live: tick the box and the badge goes to colour immediately. The old
+   scheme baked `_lock.png` into the `src` at render time, so it could never
+   change until the note was regenerated. */
+.achievement-guide.ag-spine img.ag-b {
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  margin-right: 9px;
+  vertical-align: -10px;
+  border: 1px solid var(--ag-hair);
+  background: var(--ag-hair);
+  transition: filter .12s ease-out, width .12s ease-out, height .12s ease-out;
+}
+.achievement-guide.ag-spine li.task-list-item:not(.is-checked) img.ag-b {
+  filter: grayscale(1) contrast(.9) opacity(.5);
+}
+.achievement-guide.ag-spine li.task-list-item.is-checked img.ag-b {
+  width: 20px; height: 20px; vertical-align: -5px; margin-right: 7px;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .achievement-guide.ag-spine img.ag-b { transition: none; }
+}
+
+.achievement-guide.ag-spine .ag-m,            /* type: Story / Boss / Pickup / … */
+.achievement-guide.ag-spine .ag-r,            /* rarity, hardcore rate           */
+.achievement-guide.ag-spine .ag-p {           /* points                          */
+  font-size: .68rem;
+  color: var(--ag-ink-faint);
+  margin-left: 7px;
+  white-space: nowrap;
+}
+.achievement-guide.ag-spine .ag-m {
+  font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 4px;
+  background: var(--ag-hair); color: var(--ag-ink-dim);
+}
+.achievement-guide.ag-spine .ag-m.boss        { background: rgba(208,144,144,.14); color: #d09090; }
+.achievement-guide.ag-spine .ag-m.collectible { background: rgba(208,189,133,.14); color: #d0bd85; }
+.achievement-guide.ag-spine .ag-m.skill       { background: rgba(183,149,207,.14); color: #b795cf; }
+.achievement-guide.ag-spine .ag-m.story       { background: rgba(143,201,143,.14); color: #8fc98f; }
+.achievement-guide.ag-spine .ag-m.pickup      { background: rgba(143,176,196,.14); color: #8fb0c4; }
+.achievement-guide.ag-spine .ag-m.grind       { background: rgba(201,171,127,.14); color: #c9ab7f; }
+
+/* Rarity is a number, not a badge. Only the ultra-rare band earns colour. */
+.achievement-guide.ag-spine .ag-r.ultra { color: var(--ag-accent); }
+
+/* Source collapses to a tappable dot. No [G1] text on the line. */
+.achievement-guide.ag-spine a.ag-s {
+  margin-left: 7px;
+  font-size: .8rem;
+  color: var(--ag-ink-faint);
+  text-decoration: none;
+  opacity: .7;
+}
+.achievement-guide.ag-spine a.ag-s:hover { color: var(--ag-accent); opacity: 1; }
+.achievement-guide.ag-spine a.ag-s::after { content: "ⓘ"; }
+.achievement-guide.ag-spine a.ag-s.thin::after { content: "ⓘ"; opacity: .55; }  /* single-source */
+
+/* Recoverable hazard — a phrase on the line, not a coloured block. */
+.achievement-guide.ag-spine .ag-back {
+  font-size: .72rem; color: var(--ag-quiet); margin-left: 7px; white-space: nowrap;
+}
+.achievement-guide.ag-spine .ag-back::before { content: "↺ "; }
+
+/* Critical path and spoiler markers. */
+.achievement-guide.ag-spine .ag-flag { margin-left: 6px; font-size: .78rem; }
+.achievement-guide.ag-spine .ag-spoil {
+  margin-left: 7px; font-size: .6rem; font-weight: 700; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ag-ink-faint);
+}
+
+/* Image captions. */
+.achievement-guide.ag-spine .ag-caption {
+  font-size: .74rem; color: var(--ag-ink-faint); margin-bottom: 4px;
+}
+
+
+/* ── 6 · Light mode ─────────────────────────────────────────────────────── */
+
+.theme-light .achievement-guide.ag-spine {
+  --ag-lost: #b83f28;
+  --ag-lost-bg: rgba(184, 63, 40, .07);
+  --ag-quiet: #55708a;
+}
+.theme-light .achievement-guide.ag-spine .ag-hero { backdrop-filter: none; }
+
+
+/* ── 7 · Print ──────────────────────────────────────────────────────────── */
+
+@media print {
+  .achievement-guide.ag-spine .ag-hero { position: static; }
+  .achievement-guide.ag-spine li.task-list-item.is-checked { display: none; }
+  .achievement-guide.ag-spine ul.contains-task-list > li.task-list-item:not(.is-checked)::after { content: none; }
+}
+
+/* now-card: static restatement, refreshed on regeneration. Auto-hide the
+   moment any box in the note is ticked — the YOU ARE HERE highlight is
+   the live tracker from then on. */
+.achievement-guide.ag-spine:has(li.task-list-item.is-checked) .callout[data-callout="now"] { display: none; }
+
+/* ── Spine fixes, 2026-08-26 (second viewing) ───────────────────────────────
+   1 · Obsidian's DEFAULT checked-task style adds a full-line line-through on
+       the li, which draws across the inline checkbox. The spine's design
+       strikes only the title and dims the rest — kill the default, then
+       re-assert the title strike (descendant, so loose-list <p> wrapping
+       can't break it).
+   2 · Obsidian hangs checkboxes into the list gutter with a negative inline
+       margin; inside the chunk list that lands the sub-boxes on the 2px
+       rail. Zero the hang and widen the chunk padding so boxes sit beside
+       the rail, never on it. */
+.achievement-guide.ag-spine li.task-list-item.is-checked,
+.achievement-guide.ag-spine li.task-list-item.is-checked > p {
+  text-decoration: none;
+}
+.achievement-guide.ag-spine li.task-list-item.is-checked strong {
+  text-decoration: line-through;
+}
+.achievement-guide.ag-spine li.task-list-item ul.contains-task-list {
+  padding-left: 24px;
+}
+.achievement-guide.ag-spine li.task-list-item ul.contains-task-list input[type="checkbox"] {
+  margin-inline-start: 0;
+}
+
+/* ── Spine: per-run rows in the sticky header (from the design mock) ────────
+   Rendered only when the plan has more than one pass; each row is
+   label · mini-bar · done/total. A run with nothing done yet dims. */
+.achievement-guide.ag-spine .ag-runs { display: flex; flex-direction: column; gap: 5px; margin-top: 10px; }
+.achievement-guide.ag-spine .ag-run { display: flex; align-items: center; gap: 9px; }
+.achievement-guide.ag-spine .ag-run-l {
+  flex: 1; font-size: 11px; color: var(--ag-ink-dim);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.achievement-guide.ag-spine .ag-run.todo .ag-run-l { color: var(--ag-ink-faint); }
+.achievement-guide.ag-spine .ag-run-b {
+  width: 56px; flex: none; height: 3px; border-radius: 2px; overflow: hidden;
+  background: var(--ag-hair);
+}
+.achievement-guide.ag-spine .ag-run-b i { display: block; height: 100%; background: var(--ag-accent); }
+.achievement-guide.ag-spine .ag-run-c {
+  width: 40px; flex: none; font-size: 10px; color: var(--ag-ink-faint);
+  text-align: right; font-variant-numeric: tabular-nums;
+}

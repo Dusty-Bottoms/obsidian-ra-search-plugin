@@ -10,6 +10,8 @@ export interface RaPluginSettings {
 	displayRibbonIcon: boolean;
 	autoOpenAddedGame: boolean;
 	consoleSubfolders: boolean;
+	guideRegistryUrl: string;
+	fetchGuides: boolean;
 }
 
 export const DEFAULT_SETTINGS: RaPluginSettings = {
@@ -21,6 +23,8 @@ export const DEFAULT_SETTINGS: RaPluginSettings = {
 	displayRibbonIcon: true,
 	autoOpenAddedGame: true,
 	consoleSubfolders: true,
+	guideRegistryUrl: "https://raw.githubusercontent.com/Dusty-Bottoms/ra-guides/main",
+	fetchGuides: true,
 };
 
 export class RaSettingTab extends PluginSettingTab {
@@ -135,6 +139,27 @@ export class RaSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 					this.plugin.toggleRibbonIcon();
 				})
+			});
+
+		new Setting(containerEl)
+			.setName("Fetch mastery guides")
+			.setDesc(`When a game has a published mastery guide, install it alongside the game note and tick your hardcore unlocks.\nDefault: ${DEFAULT_SETTINGS.fetchGuides}`)
+			.addToggle(btn => {
+				btn.setValue(this.plugin.settings.fetchGuides).onChange(async (value) => {
+					this.plugin.settings.fetchGuides = value;
+					await this.plugin.saveSettings();
+				})
+			});
+
+		new Setting(containerEl)
+			.setName("Guide registry URL")
+			.setDesc(`Where to look up published mastery guides.\nDefault: ${DEFAULT_SETTINGS.guideRegistryUrl}`)
+			.addText((text) => {
+				text.setValue(this.plugin.settings.guideRegistryUrl).onChange(async (val) => {
+					this.plugin.settings.guideRegistryUrl = val.trim();
+					await this.plugin.saveSettings();
+				});
+				text.setPlaceholder(DEFAULT_SETTINGS.guideRegistryUrl);
 			});
 	}
 }
