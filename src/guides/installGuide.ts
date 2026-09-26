@@ -18,6 +18,12 @@ const sanitizeGuideTitle = (title: string) => title.replaceAll(/:|\?|\\|\/|\|/g,
 export const guideFileName = (title: string, consoleName: string) =>
 	normalizePath(`RetroAchievements/${sanitizeGuideTitle(title)} (${consoleNameSanitizer(consoleName)}).md`);
 
+/** Any note already carrying this game's guide, wherever it lives and however its console is named. */
+const findExistingGuide = (plugin: RaSearchPlugin, gameId: number): TFile | null =>
+	plugin.app.vault.getMarkdownFiles().find(
+		(file) => String(plugin.app.metadataCache.getFileCache(file)?.frontmatter?.ra_game_id) === String(gameId),
+	) ?? null;
+
 /**
  * Installs a game's mastery guide, personalized to the reader's hardcore
  * unlocks, and links it from the library note's frontmatter.
@@ -40,8 +46,8 @@ export async function installGuide(
 		return false;
 	}
 
-	const path = guideFileName(game.title, game.console);
-	let guideFile = await noteExists(plugin.app, path);
+	const path = guideFileName(entry.title, entry.console);
+	let guideFile = findExistingGuide(plugin, game.gameId) ?? await noteExists(plugin.app, path);
 	let installed = false;
 
 	if (!guideFile) {

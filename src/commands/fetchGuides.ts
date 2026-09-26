@@ -46,15 +46,13 @@ export const runFetchGuides = async (plugin: RaSearchPlugin) => {
 	}
 
 	const guideIndex = await fetchIndexIfEnabled(plugin);
-	const targets = libraryTargets(plugin);
+	const targets = libraryTargets(plugin).filter(({ target }) => guideIndex.guides[String(target.gameId)]);
 
 	let installedCount = 0;
-	for (const [i, { file, target }] of targets.entries()) {
+	for (const { file, target } of targets) {
 		const installed = await installGuide(plugin, target, guideIndex, file);
 		if (installed) {
 			installedCount++;
-		}
-		if (i + 1 != targets.length) {
 			await abortableSleep(2000, new AbortController().signal);
 		}
 	}
