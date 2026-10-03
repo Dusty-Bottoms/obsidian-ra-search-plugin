@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting, SecretComponent } from 'obsidian';
 import RaSearchPlugin from './main';
+import { runImportRomScan } from './commands';
 
 export interface RaPluginSettings {
 	raWebApiKey: string;
@@ -7,6 +8,7 @@ export interface RaPluginSettings {
 	raUsername: string;
 	raGamesPath: string;
 	includeSubsets: boolean;
+	romScanPath: string;
 	displayRibbonIcon: boolean;
 	autoOpenAddedGame: boolean;
 	consoleSubfolders: boolean;
@@ -20,6 +22,7 @@ export const DEFAULT_SETTINGS: RaPluginSettings = {
 	raUsername: "",
 	raGamesPath: "RetroAchievements/library",
 	includeSubsets: false,
+	romScanPath: "RetroAchievements/ra-catalog.csv",
 	displayRibbonIcon: true,
 	autoOpenAddedGame: true,
 	consoleSubfolders: true,
@@ -129,6 +132,22 @@ export class RaSettingTab extends PluginSettingTab {
 					this.plugin.settings.includeSubsets = value;
 					await this.plugin.saveSettings();
 				})
+			});
+
+		new Setting(containerEl)
+			.setName("ROM scan file")
+			.setDesc(`Vault path of an ra-manager ra-catalog.csv (or a list of game IDs, one per line) for "Import ROM library from scan file".\nDefault: ${DEFAULT_SETTINGS.romScanPath}`)
+			.addText(text => {
+				text.setValue(this.plugin.settings.romScanPath).onChange(async (val) => {
+					this.plugin.settings.romScanPath = val.trim();
+					await this.plugin.saveSettings();
+				});
+				text.setPlaceholder(DEFAULT_SETTINGS.romScanPath);
+			})
+			.addButton(btn => {
+				btn.setButtonText("Import").setCta().onClick(() => {
+					void runImportRomScan(this.plugin);
+				});
 			});
 
 		new Setting(containerEl)
