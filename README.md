@@ -24,6 +24,14 @@ Add any game or subset to your notes, whether or not you've played it before!
 ## Create base
 Automatically create a base within Obsidian, automatically showing files in your configured RA notes library. You can customize it from here yourself, it's just to get you going. As a side note, the boxart images used in the base are hosted on RetroAchievements official media host: https://media.retroachievements.org.
 
+## Fetch guides for library
+Installs mastery guides for any already-imported games that have one published, without re-running the full import. Useful after a guide is published for a game you added earlier.
+
+# Mastery guides
+When a game has a published mastery guide, `Add game`, `Auto import RA library`, and `Fetch guides for library` install a personalized copy alongside the game note at `RetroAchievements/guides/<Title> (<Console>).md`, with achievements you've already unlocked in hardcore ticked off. A note already carrying that game's `ra_game_id` is never overwritten, wherever it lives, so a guide you've customized by hand stays yours. The game note's frontmatter gets a `guide` property linking to it.
+
+Guides come from a public registry of full-set, progress-neutral guides at `raw.githubusercontent.com/Dusty-Bottoms/ra-guides`. Installing one makes a network request to that host to look up and download the guide; softcore-only readers are unaffected since the guide stays hardcore-safe (softcore unlocks are never ticked). Turn this off with the **Fetch mastery guides** setting, or point **Guide registry URL** at a different registry that follows the same `index.json`/`guides/<id>.md` layout.
+
 # Settings
 ![image of the settings menu in Obsidian](https://github.com/DesynchVT/obsidian-ra-search-plugin/blob/fc921981fe43b3d6422b624ba932e247bfdd160b/demo-images/plugin-settings.png?raw=true)
 
@@ -52,6 +60,12 @@ Whether auto import includes subsets or not.
 
 ## Show RA logo in ribbon menu
 Toggle RA logo in ribbon menu. Clicking it runs the `Add game` command.
+
+## Fetch mastery guides
+Whether to install a published mastery guide when one exists for an imported game. See [Mastery guides](#mastery-guides).
+
+## Guide registry URL
+Where to look up published mastery guides. Defaults to `Dusty-Bottoms/ra-guides` on GitHub.
 
 # Installation
 Click the link to install the RA Search plugin: https://community.obsidian.md/plugins/ra-search.

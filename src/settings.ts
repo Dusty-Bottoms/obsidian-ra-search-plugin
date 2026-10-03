@@ -1,5 +1,6 @@
 import { App, PluginSettingTab, Setting, SecretComponent } from 'obsidian';
 import RaSearchPlugin from './main';
+import { runImportRomScan } from './commands';
 
 export interface RaPluginSettings {
 	raWebApiKey: string;
@@ -7,9 +8,12 @@ export interface RaPluginSettings {
 	raUsername: string;
 	raGamesPath: string;
 	includeSubsets: boolean;
+	romScanPath: string;
 	displayRibbonIcon: boolean;
 	autoOpenAddedGame: boolean;
 	consoleSubfolders: boolean;
+	guideRegistryUrl: string;
+	fetchGuides: boolean;
 }
 
 export const DEFAULT_SETTINGS: RaPluginSettings = {
@@ -18,9 +22,12 @@ export const DEFAULT_SETTINGS: RaPluginSettings = {
 	raUsername: "",
 	raGamesPath: "RetroAchievements/library",
 	includeSubsets: false,
+	romScanPath: "RetroAchievements/ra-catalog.csv",
 	displayRibbonIcon: true,
 	autoOpenAddedGame: true,
 	consoleSubfolders: true,
+	guideRegistryUrl: "https://raw.githubusercontent.com/Dusty-Bottoms/ra-guides/main",
+	fetchGuides: true,
 };
 
 export class RaSettingTab extends PluginSettingTab {
@@ -128,6 +135,22 @@ export class RaSettingTab extends PluginSettingTab {
 			});
 
 		new Setting(containerEl)
+			.setName("ROM scan file")
+			.setDesc(`Vault path of an ra-manager ra-catalog.csv (or a list of game IDs, one per line) for "Import ROM library from scan file".\nDefault: ${DEFAULT_SETTINGS.romScanPath}`)
+			.addText(text => {
+				text.setValue(this.plugin.settings.romScanPath).onChange(async (val) => {
+					this.plugin.settings.romScanPath = val.trim();
+					await this.plugin.saveSettings();
+				});
+				text.setPlaceholder(DEFAULT_SETTINGS.romScanPath);
+			})
+			.addButton(btn => {
+				btn.setButtonText("Import").setCta().onClick(() => {
+					void runImportRomScan(this.plugin);
+				});
+			});
+
+		new Setting(containerEl)
 			.setName("Show RA logo in ribbon menu")
 			.addToggle(btn => {
 				btn.setValue(this.plugin.settings.displayRibbonIcon).onChange(async (value) => {
@@ -135,6 +158,27 @@ export class RaSettingTab extends PluginSettingTab {
 					await this.plugin.saveSettings();
 					this.plugin.toggleRibbonIcon();
 				})
+			});
+
+		new Setting(containerEl)
+			.setName("Fetch mastery guides")
+			.setDesc(`When a game has a published mastery guide, install it alongside the game note and tick your hardcore unlocks.\nDefault: ${DEFAULT_SETTINGS.fetchGuides}`)
+			.addToggle(btn => {
+				btn.setValue(this.plugin.settings.fetchGuides).onChange(async (value) => {
+					this.plugin.settings.fetchGuides = value;
+					await this.plugin.saveSettings();
+				})
+			});
+
+		new Setting(containerEl)
+			.setName("Guide registry URL")
+			.setDesc(`Where to look up published mastery guides.\nDefault: ${DEFAULT_SETTINGS.guideRegistryUrl}`)
+			.addText((text) => {
+				text.setValue(this.plugin.settings.guideRegistryUrl).onChange(async (val) => {
+					this.plugin.settings.guideRegistryUrl = val.trim();
+					await this.plugin.saveSettings();
+				});
+				text.setPlaceholder(DEFAULT_SETTINGS.guideRegistryUrl);
 			});
 	}
 }

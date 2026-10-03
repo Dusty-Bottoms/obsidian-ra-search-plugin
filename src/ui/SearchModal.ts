@@ -3,6 +3,7 @@ import RaSearchPlugin from "../main";
 import { isNumeric, openVaultNote } from "../utils";
 import { getSpecificGame } from "../ra";
 import { addGame } from "../commands";
+import { fetchIndexIfEnabled, installGuide } from "../guides";
 
 export class SearchModal extends Modal {
 	private readonly plugin: RaSearchPlugin;
@@ -64,6 +65,8 @@ export class SearchModal extends Modal {
 			const gameNote = await addGame(this.plugin, game);
 			if (gameNote != null) {
 				new Notice(`${this.plugin.manifest.name}: Imported "${game.title}"`);
+				const guideIndex = await fetchIndexIfEnabled(this.plugin);
+				await installGuide(this.plugin, game, guideIndex, gameNote);
 				if (this.plugin.settings.autoOpenAddedGame) {
 					await openVaultNote(this.app, gameNote);
 				}

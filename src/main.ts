@@ -7,7 +7,7 @@ import {
 	RaSettingTab,
 } from './settings';
 import { type AuthObject, buildAuthorization } from '@retroachievements/api';
-import { runAddGameById, runAutoImport, runCreateBase } from './commands';
+import { runAddGameById, runAutoImport, runCreateBase, runFetchGuides, runImportRomScan } from './commands';
 import { RA_LOGO_ICON_ID, registerRaIcon } from './icons';
 
 export default class RaSearchPlugin extends Plugin {
@@ -34,6 +34,12 @@ export default class RaSearchPlugin extends Plugin {
 		});
 
 		this.addCommand({
+			id: 'import-rom-scan',
+			name: 'Import ROM library from scan file',
+			callback: async () => await runImportRomScan(this),
+		});
+
+		this.addCommand({
 			id: 'add-game-by-id',
 			name: 'Add game',
 			callback: async () => await runAddGameById(this),
@@ -43,6 +49,12 @@ export default class RaSearchPlugin extends Plugin {
 			id: 'create-base',
 			name: 'Create base',
 			callback: async () => await runCreateBase(this),
+		});
+
+		this.addCommand({
+			id: 'fetch-guides',
+			name: 'Fetch guides for library',
+			callback: async () => await runFetchGuides(this),
 		});
 
 		this.addCommand({

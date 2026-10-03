@@ -2,6 +2,7 @@ import { addGame } from "../commands";
 import RaSearchPlugin from "../main";
 import { abortableSleep, ensureFolderStructure, gameToFileName, isAbortError, noteExists, requireCredentials } from "../utils";
 import { getGameBoxartUrl, getAllRaGames, displayCredentialsError } from "../ra";
+import { fetchIndexIfEnabled, installGuide } from "../guides";
 import { FetchedRaGame } from "../types";
 import { Notice } from "obsidian";
 
@@ -55,12 +56,16 @@ const _autoImport = async (plugin: RaSearchPlugin, signal: AbortSignal) => {
 
 	new Notice(`${plugin.manifest.name}: Importing ${games.length} of ${initialAmount} sets`);
 
+	const guideIndex = await fetchIndexIfEnabled(plugin);
 	for (const [i, game] of games.entries()) {
 		signal.throwIfAborted();
 		const [g] = await getGameBoxartUrl(plugin.raAuth, [game], signal);
 		signal.throwIfAborted();
 		if (g) {
-			await addGame(plugin, g);
+			const gameNote = await addGame(plugin, g);
+			if (gameNote != null) {
+				await installGuide(plugin, g, guideIndex, gameNote);
+			}
 		}
 		if (i + 1 != games.length) {
 			await abortableSleep(5000, signal);
